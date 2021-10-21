@@ -20,7 +20,8 @@ async def on_message(message):
         return
     # 「/wiki」と発言したら wiki と返す処理
     if re.search('/wiki', message.content):
-        await message.channel.send('wiki')
+        word = message.content.strip('/wiki ')
+        await message.channel.send(word)
 
 
 # Botの起動とDiscordサーバーへの接続

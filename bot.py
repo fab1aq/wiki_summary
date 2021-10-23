@@ -8,6 +8,7 @@ exec(open('env.py').read())
 WIKI_SUMMARY_TOKEN = os.environ['WIKI_SUMMARY_TOKEN']
 
 client = discord.Client()
+
 # 起動時に動作する処理
 @client.event
 async def on_ready():
@@ -26,7 +27,9 @@ async def on_message(message):
         try:
             result = wikipedia.summary(search_word)
         except wikipedia.exceptions.DisambiguationError  as e:
-            result = 'wikiの結果が上手く返ってきませんでした。より具体的なワードで検索してみてください。'
+            result = '[error] 曖昧な単語です。より具体的な単語で検索してみてください。'
+        except wikipedia.exceptions.PageError  as e:
+            result = '[error] ページが存在しない単語です。別の単語で検索してみてください。'
         await message.channel.send(result)
 
 # Botの起動とDiscordサーバーへの接続

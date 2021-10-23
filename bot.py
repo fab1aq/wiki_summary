@@ -4,13 +4,6 @@ import discord
 
 wikipedia.set_lang('ja')
 
-def get_wiki_summary(search_word):
-    try:
-        result = wikipedia.page(search_word)
-        return result.summary
-    except wikipedia.exceptions.DisambiguationError  as e:
-        return 'wikiの結果が上手く返ってきませんでした。より具体的なワードで検索してみてください。'
-
 exec(open('env.py').read())
 WIKI_SUMMARY_TOKEN = os.environ['WIKI_SUMMARY_TOKEN']
 
@@ -30,9 +23,11 @@ async def on_message(message):
     # 「/wiki」と発言したら wiki の要約を返す
     if message.content.startswith('/wiki'):
         search_word = message.content.strip('/wiki ')
-        print(search_word)
-        wiki_summary = get_wiki_summary(search_word)
-        await message.channel.send(wiki_summary)
+        try:
+            result = wikipedia.summary(search_word)
+        except wikipedia.exceptions.DisambiguationError  as e:
+            result = 'wikiの結果が上手く返ってきませんでした。より具体的なワードで検索してみてください。'
+        await message.channel.send(result)
 
 # Botの起動とDiscordサーバーへの接続
 client.run(WIKI_SUMMARY_TOKEN)

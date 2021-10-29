@@ -18,9 +18,9 @@ async def on_ready():
 async def wiki(context, search_word):
     try:
         result = wikipedia.summary(search_word)
-    except wikipedia.exceptions.DisambiguationError  as e:
+    except wikipedia.exceptions.DisambiguationError:
         result = '[error] 曖昧な単語です。より具体的な単語で検索してみてください。'
-    except wikipedia.exceptions.PageError  as e:
+    except wikipedia.exceptions.PageError:
         result = '[error] ページが存在しない単語です。別の単語で検索してみてください。'
     await context.send(result)
 

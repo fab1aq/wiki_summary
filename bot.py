@@ -14,6 +14,11 @@ async def on_ready():
     # 起動したらターミナルにログイン通知が表示される
     print('ログインしました')
 
+@bot.event
+async def on_command_error(content, error):
+    if isinstance(error, commands.errors.MissingRequiredArgument):
+        await content.send('[error] 検索単語がありません。\"/wiki 検索単語\" で検索してみてください。')
+
 @bot.command()
 async def wiki(context, search_word):
     try:
@@ -23,11 +28,6 @@ async def wiki(context, search_word):
     except wikipedia.exceptions.PageError:
         result = '[error] ページが存在しない単語です。別の単語で検索してみてください。'
     await context.send(result)
-
-@wiki.error
-async def wiki_error(context, error):
-    if isinstance(error, commands.errors.MissingRequiredArgument):
-        await context.send('[error] 検索単語がありません。\"/wiki 検索単語\" で検索してみてください。')
 
 # Botの起動とDiscordサーバーへの接続
 bot.run(WIKI_SUMMARY_TOKEN)
